@@ -21,71 +21,87 @@ public class CartServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    System.out.println("--------------------CartServlet(doPost())--------------------");
 
-		request.setCharacterEncoding("UTF-8");
-		int item_id = Integer.parseInt(request.getParameter("item_id"));
-		String name = request.getParameter("name");
-		int price = Integer.parseInt(request.getParameter("price"));
-		int quantity = Integer.parseInt(request.getParameter("quantity"));
-		int sum_price = price * quantity;
+	    request.setCharacterEncoding("UTF-8");
+	    String action = request.getParameter("action");
+	    int item_id = Integer.parseInt(request.getParameter("item_id"));
 
-		System.out.println("item_id=" + item_id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", sum_price=" + sum_price);
+		// ■カート情報を保持するcartMap（Mapの中にListがネストした構造）
+	    // ※挿入順を保持したい→LinkedHashMap
+		Map<Integer, List<Object>> cartMap = new LinkedHashMap<>();
+		List<Object> item = new ArrayList<>();
 
 		HttpSession session = request.getSession();
 		String cartId = (String) session.getAttribute("cartId");
 
-		// カート情報を保持するcartMap
-		// 挿入順を保持するためLinkedHashMapを使う
-		Map<Integer, List<Object>> cartMap = new LinkedHashMap<>();
-		// Mapの中にListがネストした構造
-		List<Object> item = new ArrayList<>();
+		// ■「削除」ボタンが押された場合
+	    if (action != null && action.equals("delete")) {
 
-		if (session.getAttribute(cartId) == null) {
-			// cartセッションが存在しない（初めてカートに入れる）場合
-			System.out.println("cartセッションが存在しない");
+	    	cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
+	    	cartMap.remove(item_id);
+	    	System.out.println(item_id + "をカートから削除した");
 
-			item.add(name);
-			item.add(price);
-			item.add(quantity);
-			item.add(sum_price);
+	    // ■「カートに入れるボタン」が押された場合
+	    } else {
+	//	    	int item_id = Integer.parseInt(request.getParameter("item_id"));
+			String name = request.getParameter("name");
+			int price = Integer.parseInt(request.getParameter("price"));
+			int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-		} else {
-			// cartセッションが存在する場合
-			// cartMapを取得
-			cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
-			System.out.println("cartセッションが存在する");
+			System.out.println("item_id=" + item_id + ", name=" + name + ", price=" + price + ", quantity=" + quantity);
 
-			System.out.println("格納されているキーの一覧");
-			System.out.println(cartMap.keySet());
+	//		HttpSession session = request.getSession();
+	//		String cartId = (String) session.getAttribute("cartId");
 
-			if (cartMap.containsKey(item_id)) {
-				// 既に同じ商品がカートにある場合→更新
-				System.out.println("既に同じ商品がカートにある");
-				item = (List<Object>) cartMap.get(item_id);
+			// ■cartセッションが存在しない（初めてカートに入れる）場合
+			if (session.getAttribute(cartId) == null) {
+				System.out.println("cartセッションが存在しない");
 
-				System.out.println("item.get(2)=" + item.get(2));
-				System.out.println("item.get(3)=" + item.get(3));
-
-				item.set(2, (int)item.get(2) + quantity); //個数（quantity）
-				item.set(3, (int)item.get(3) + sum_price); //合計（sum_price）
-			} else {
-				// まだ同じ商品がカートにない場合→追加
-				System.out.println("まだ同じ商品がカートにない");
-	//			list.add(item_id);
 				item.add(name);
 				item.add(price);
 				item.add(quantity);
-				item.add(sum_price);
+				item.add(price * quantity);
+
+			// ■cartセッションが存在する場合
+			} else {
+				// cartMapを取得
+				cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
+				System.out.println("cartセッションが存在する");
+
+				System.out.println("格納されているキーの一覧");
+				System.out.println(cartMap.keySet());
+
+				// ■既に同じ商品がカートにある場合→更新
+				if (cartMap.containsKey(item_id)) {
+					System.out.println("既に同じ商品がカートにある");
+					item = (List<Object>) cartMap.get(item_id);
+
+					System.out.println("item.get(2)=" + item.get(2));
+					System.out.println("item.get(3)=" + item.get(3));
+					quantity = (int)item.get(2) + quantity;
+					item.set(2, quantity); //個数（quantity）
+					item.set(3, price * quantity); //合計（sum_price）
+					System.out.println("カートの " + item_id + " を更新");
+
+				// ■まだ同じ商品がカートにない場合→追加
+				} else {
+					System.out.println("まだ同じ商品がカートにない");
+		//			list.add(item_id);
+					item.add(name);
+					item.add(price);
+					item.add(quantity);
+					item.add(price * quantity);
+					System.out.println(item_id + " をカートに追加");
+				}
 			}
-		}
 
-		cartMap.put(item_id, item);
+			cartMap.put(item_id, item);
+	    }
 
-		System.out.println("格納されているキーの一覧");
-		System.out.println(cartMap.keySet());
 
-		System.out.println(item + "をcartMap(" + item_id + ")に追加");
+		System.out.println("格納されているキーの一覧 " + cartMap.keySet());
 		System.out.println("cartMap" + cartMap);
 
+		// ■カートをセッション保存
 		session.setAttribute(cartId, cartMap); //セッションスコープの属性名はユーザー固有
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/cart.jsp");
@@ -96,8 +112,6 @@ public class CartServlet extends HttpServlet {
 	    System.out.println("--------------------CartServlet(doGet())--------------------");
 
 	    System.out.println("リンクから遷移");
-
-
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/cart.jsp");
 		dispatcher.forward(request, response);

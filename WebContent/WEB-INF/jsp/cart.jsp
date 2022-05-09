@@ -28,13 +28,15 @@ session.setAttribute("cartMap", cartMap);
 </thead>
 <tbody>
 <c:forEach var="item" items="${cartMap}">
+<form action="/shopping_new/CartServlet?action=delete" method="post">
 <tr>
     <td>${item.value[0]}</td>
     <td>${item.value[1]}</td>
     <td>${item.value[2]}</td>
     <td>${item.value[3]}</td>
-    <td><button type="submit" name="${item.key}">削除</button></td>
+    <td><button type="submit" name="item_id" value="${item.key}">削除</button></td>
 <tr>
+</form>
 </c:forEach>
 </tbody>
 </table>
