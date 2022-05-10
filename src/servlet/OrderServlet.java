@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import model.ChangeItemLogic;
 import model.GetHistoryLogic;
 import model.HistoryBean;
+import model.ItemBean;
 import model.UserBean;
 
 @WebServlet("/OrderServlet")
@@ -46,21 +47,19 @@ public class OrderServlet extends HttpServlet {
 			// 必要なパラ（商品ID、注文数）
 	//		String result = changeItemLogic.updateStock(cartMap);
 
-	//		int item_id = 2; //この値を変更してテストする
-	//		int quantity = 5; //この値を変更してテストする
-	//		int price = 2000; //この値を変更してテストする
-
 			// ■在庫のチェック
-			int short_stock = changeItemLogic.checkStock(item_id, quantity);
+			String short_stock = changeItemLogic.checkStock(item_id, quantity);
 
 			// チェックOK
-			if (short_stock == 0) {
+			if (short_stock == null) {
 				System.out.println("在庫チェックOK");
 
 			// チェックNG
 			} else {
-				System.out.println("item_id=" + short_stock + "の在庫チェックNG");
-				request.setAttribute("errorMsg", "'商品名'の在庫数が足りないため、注文処理を完了できませんでした。");
+				List<ItemBean> itemList = (List<ItemBean>) session.getAttribute("itemList");
+
+				System.out.println("item_id=" + item_id + "の在庫チェックNG");
+				request.setAttribute("errorMsg", short_stock + "の在庫が足りないため、注文処理を完了できませんでした。");
 
 			    dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/cart.jsp");
 				dispatcher.forward(request, response);

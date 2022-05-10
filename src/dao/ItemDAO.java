@@ -46,6 +46,12 @@ public class ItemDAO {
 				itemList.add(item);
 			}
     		System.out.println("DBから商品一覧を取得");
+    		System.out.println("itemList=");
+
+            for(ItemBean item : itemList) {
+                System.out.println("(" + item.toString() + ")");
+            }
+
 
         } catch (SQLException e) {
         	e.printStackTrace();
@@ -57,36 +63,37 @@ public class ItemDAO {
 
 
 	// ◆在庫数をチェックするメソッド
-	public int checkStock(int item_id, int quantity) {
+	public String checkStock(int item_id, int quantity) {
  		System.out.println("....................ItemDAO(checkStock())....................");
 
  		// データベース接続
  		Connection con = null;
-         con = DBconnect.getConnection();
+ 		con = DBconnect.getConnection();
 
-         try {
+        String short_stock = null; //在庫不足がある場合その商品名
+        try {
         	// ■在庫数のチェック
-        	 String sql0 = "SELECT "
+        	 String sql0 = "SELECT name, "
 			        	 + "CASE WHEN quantity<" + quantity +  " THEN false "
 			        	 + "ELSE true "
 			        	 + "END AS is_orderable "
 			        	 + "FROM item WHERE id=" + item_id; //※パラメータ指定すると文法エラーになったため、値を直接記述した
 
-        	System.out.println("SELECT CASE WHEN quantity<" + quantity + " THEN false ELSE true END AS is_orderable FROM item WHERE id=" + item_id);
+        	System.out.println("SELECT name, CASE WHEN quantity<" + quantity + " THEN false ELSE true END AS is_orderable FROM item WHERE id=" + item_id);
 
         	PreparedStatement pstmt0 = con.prepareStatement(sql0);
        		ResultSet rs = pstmt0.executeQuery(sql0);
 //
        		boolean is_orderable = false;
        		if (rs.next()) {
-       			is_orderable = rs.getBoolean(1);
+       			is_orderable = rs.getBoolean("is_orderable");
+       			short_stock = rs.getString("name");
        			System.out.println("is_orderable=" + is_orderable);
        		}
 
        		if (!is_orderable) {
        			System.out.println("在庫が不足");
        			System.out.println("........................................");
-       			return item_id; //不足商品のitem_id
        		}
 
          } catch (SQLException e) {
@@ -96,7 +103,7 @@ public class ItemDAO {
 
          System.out.println("在庫が足りている");
          System.out.println("........................................");
-         return 0; //問題なし
+         return short_stock;
 }
 
 
@@ -106,8 +113,6 @@ public class ItemDAO {
  		// データベース接続
  		Connection con = null;
          con = DBconnect.getConnection();
-
-         int orderResult = 0;
 
          try {
 	       		// ■在庫数を減らす

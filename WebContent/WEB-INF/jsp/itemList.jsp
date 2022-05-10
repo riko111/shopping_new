@@ -24,16 +24,28 @@
 <form action="/shopping_new/CartServlet" method="post">
     <td>${item.name}</td>
     <td>¥${item.price}</td>
+
+<c:choose>
+<%-- ■在庫切れのチェック --%>
+	<c:when test="${item.quantity > 0}">
+
     <input type="hidden" name="item_id" value="${item.id}">
     <input type="hidden" name="name" value="${item.name}">
     <input type="hidden" name="price" value="${item.price}">
-
     <td><select name="quantity">
     <c:forEach var="i" begin="1" end="${item.quantity}" step="1">
 			<option value="${i}">${i}</option>
 		</c:forEach>
 		</select></td>
     <td><button type="submit">カートに入れる</button></td>
+	</c:when>
+
+	<c:otherwise>
+		<td>品切れ中！</td>
+	</c:otherwise>
+</c:choose>
+
+
 </form>
 <tr>
 </c:forEach>

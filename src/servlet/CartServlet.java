@@ -47,7 +47,6 @@ public class CartServlet extends HttpServlet {
 
 	    // ■「カートに入れるボタン」が押された場合
 	    } else {
-	//	    	int item_id = Integer.parseInt(request.getParameter("item_id"));
 			String name = request.getParameter("name");
 			int price = Integer.parseInt(request.getParameter("price"));
 			int quantity = Integer.parseInt(request.getParameter("quantity"));
@@ -65,12 +64,9 @@ public class CartServlet extends HttpServlet {
 
 			// ■cartセッションが存在する場合
 			} else {
-				// cartMapを取得
+				// ■cartMapを取得
 				cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
 				System.out.println("cartセッションが存在する");
-
-				System.out.println("格納されているキーの一覧");
-				System.out.println(cartMap.keySet());
 
 				// ■既に同じ商品がカートにある場合→更新
 				if (cartMap.containsKey(item_id)) {
@@ -112,7 +108,7 @@ public class CartServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    System.out.println("--------------------CartServlet(doGet())--------------------");
 
-	    System.out.println("リンクから遷移");
+	    System.out.println("リンクからカートに遷移");
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/cart.jsp");
 		dispatcher.forward(request, response);
