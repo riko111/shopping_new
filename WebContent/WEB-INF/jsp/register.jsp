@@ -13,6 +13,7 @@
 パスワード：<input type="password" name="pass"><br>
 <button type="submit">アカウント登録</button><br>
 </form>
+<p>${errorMsg}</p>
 <a href="/shopping_new">TOPに戻る</a>
 </body>
 </html>

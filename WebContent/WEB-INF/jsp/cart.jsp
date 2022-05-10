@@ -46,7 +46,7 @@ session.setAttribute("cartMap", cartMap);
 
 <p>合計金額：¥${total}</p>
 <a href="OrderServlet"><button type="button">注文確定</button></a>
-<c:if test="${empty cartMap}"> <%-- 要素数が0のインスタンス --%>
+<c:if test="${empty cartMap}"> <%-- 要素がない --%>
 <p>お客様のカートに商品はありません。</p>
 </c:if>
 <p>${errorMsg}</p>

@@ -4,7 +4,7 @@ import dao.UserDAO;
 
 public class LoginLogic {
 	public UserBean execute(String userName, String pass) {
-		System.out.println("--------------------LoginLogic(execute(userName, pass))--------------------");
+		System.out.println("--------------------LoginLogic(execute())--------------------");
 
 		UserBean user = new UserBean(userName, pass);
 

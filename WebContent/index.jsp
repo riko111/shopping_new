@@ -9,7 +9,7 @@
 <body>
 <h1>ようこそ</h1>
 <form action="/shopping_new/LoginServlet" method="post">
-ユーザー名：<input type="text" name="userName"><br>
+ユーザー名：<input type="text" name="userName" value="${loginUser.userName}"><br>
 パスワード：<input type="password" name="pass"><br>
 <button type="submit">ログイン</button><br>
 </form>

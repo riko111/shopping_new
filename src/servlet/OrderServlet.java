@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.ChangeItemLogic;
+import model.GetHistoryLogic;
+import model.HistoryBean;
 import model.UserBean;
 
 @WebServlet("/OrderServlet")
@@ -114,6 +116,13 @@ public class OrderServlet extends HttpServlet {
 
 			if (result) {
 				System.out.println("注文履歴の追加OK");
+
+				GetHistoryLogic getHistoryLogic = new GetHistoryLogic();
+				List<HistoryBean> historyList = getHistoryLogic.execute(loginUser);
+
+				//注文履歴のセッションを更新
+				session.setAttribute("historyList", historyList);
+
 			}
 
 		}

@@ -10,6 +10,7 @@ public class RegisterLogic {
 		UserBean loginUser = null;
 
 		UserDAO dao = new UserDAO();
+
 		if(dao.registerUser(user)) {
 			// 登録後、DBから取得
 			loginUser = dao.findUser(user);

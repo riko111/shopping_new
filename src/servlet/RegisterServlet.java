@@ -20,8 +20,6 @@ public class RegisterServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    System.out.println("--------------------RegisterServlet(doGet())--------------------");
 
-//	    RegisterLogic registerLogic = new RegisterLogic();
-//	    registerLogic.execute()
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/register.jsp");
 		dispatcher.forward(request, response);
 	}
@@ -39,17 +37,23 @@ public class RegisterServlet extends HttpServlet {
 
 	    RequestDispatcher dispatcher;
 
+	    // ■アカウント登録成功
 		if(loginUser != null) {
 			HttpSession session = request.getSession();
 		    session.setAttribute("loginUser", loginUser);
 		    System.out.println("アカウント登録OK");
 
-	    	dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/itemList.jsp");
+		    request.setAttribute("errorMsg", "アカウント " + userName + " を新規登録しました。");
+
+	    // ■アカウント登録しっぱい
 		}else{
 			System.out.println("アカウント登録しっぱい");
-	    	dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin.jsp");
 
+			request.setAttribute("errorMsg", "登録できません。別のユーザー名を入力してください。");
 		}
+
+		dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/register.jsp");
+		dispatcher.forward(request, response);
 
 	}
 }

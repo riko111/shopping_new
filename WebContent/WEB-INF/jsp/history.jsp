@@ -23,23 +23,17 @@
 <tr>
     <td><c:out value="${history.order_date}" /></td>
     <td><c:out value="${history.item_name}" /></td>
-    <td><c:out value="${history.item_price}" /></td>
+    <td><c:out value="¥${history.item_price}" /></td>
     <td><c:out value="${history.order_num}" /></td>
-    <td><c:out value="${history.sum_price}" /></td>
+    <td><c:out value="¥${history.sum_price}" /></td>
 <tr>
 </c:forEach>
 </tbody>
 </table>
+<c:if test="${empty historyList}"> <%-- 要素がない --%>
+<p>お客様の注文履歴はありません。</p>
+</c:if>
 
 <a href="LoginServlet">商品リストに戻る</a>
 </body>
 </html>
-
-<%--
-	<td><c:out value="${history.id}" /></td>
-	<td><c:out value="${history.user_id}" /></td>
-	<td><c:out value="${history.item_id}" /></td>
-	<td><c:out value="${history.item_price}" /></td>
-	<td><c:out value="${history.order_num}" /></td>
-	<td><c:out value="${history.order_date}" /></td>
---%>
