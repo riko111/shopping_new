@@ -66,4 +66,40 @@ public class HistoryDAO {
         System.out.println("........................................");
         return historyList;
     }
+
+    public Boolean addHistory(int user_id, int item_id, int item_price, int order_num) {
+ 		System.out.println("....................HistoryDAO(addHistory())....................");
+
+ 		// データベース接続
+ 		Connection con = null;
+         con = DBconnect.getConnection();
+
+         try {
+       		// ■注文履歴を追加する
+     		String sql = "INSERT INTO history(user_id, item_id, item_price, order_num) VALUES (?,?,?,?)";
+
+     		System.out.println("INSERT INTO history(user_id, item_id, item_price, order_num) VALUES (" + user_id + ", " + item_id + ", " + item_price + ", " + order_num + ")");
+
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, user_id);
+            pstmt.setInt(2, item_id);
+            pstmt.setInt(3, item_price);
+            pstmt.setInt(4, order_num);
+
+            int result = pstmt.executeUpdate();
+
+    		if (result == 1) {
+    			System.out.println("DBに1レコード追加");
+    		} else {
+    			System.out.println("DBレコード追加エラー");
+    		}
+
+
+         } catch (SQLException e) {
+         	e.printStackTrace();
+
+         }
+         System.out.println("........................................");
+         return true;
+     }
 }

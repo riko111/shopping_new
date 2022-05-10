@@ -46,8 +46,8 @@ public class LoginServlet extends HttpServlet {
 		    session.setAttribute("loginUser", loginUser);
 		    System.out.println("セッションスコープにloginUserを保存");
 
-
-			String cartId = "cart" + loginUser.getId();
+//		    // cartIdを準備
+			String cartId = "" + loginUser.getId();
 			session.setAttribute("cartId", cartId);
 			System.out.println("セッションスコープにcartIdを保存");
 			System.out.println("cartId=" + cartId);
@@ -76,6 +76,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    System.out.println("--------------------LoginServlet(doGet())--------------------");
 
+	    // ■ログアウト処理
 	    request.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
 
@@ -85,11 +86,12 @@ public class LoginServlet extends HttpServlet {
 			System.out.println("action='logout'");
 			HttpSession session = request.getSession();
 
+			// カート以外のセッションを破棄
 //			session.invalidate(); //全てのセッションを破棄
+			session.removeAttribute("cartMap");
 			session.removeAttribute("loginUser");
 			session.removeAttribute("itemList");
 			session.removeAttribute("historyList");
-			session.removeAttribute("cartId");
 			System.out.println("ログアウトしました");
 			System.out.println("セッションスコープ(loginUser)を破棄");
 

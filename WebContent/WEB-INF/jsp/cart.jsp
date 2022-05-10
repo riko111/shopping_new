@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
-String cartId = (String) session.getAttribute("cartId");
+String cartId = (String)session.getAttribute("cartId");
 Map<Integer, List<Object>> cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
 
 session.setAttribute("cartMap", cartMap);
@@ -27,13 +27,16 @@ session.setAttribute("cartMap", cartMap);
 </tr>
 </thead>
 <tbody>
-<c:forEach var="item" items="${cartMap}">
+<c:forEach var="item" items="${cartMap}"> <%-- EL式で使いやすくするため"cartMap"という属性名を用意している --%>
 <form action="/shopping_new/CartServlet?action=delete" method="post">
 <tr>
     <td>${item.value[0]}</td>
     <td>${item.value[1]}</td>
     <td>${item.value[2]}</td>
-    <td>${item.value[3]}</td>
+    <td>¥${item.value[3]}</td>
+
+    <c:set var="total" value="${total + item.value[3]}" /> <%-- EL式内で加算し合計金額を算出 --%>
+
     <td><button type="submit" name="item_id" value="${item.key}">削除</button></td>
 <tr>
 </form>
@@ -41,11 +44,14 @@ session.setAttribute("cartMap", cartMap);
 </tbody>
 </table>
 
-<button type="submit" name="${item.key}">注文確定</button>
+<p>合計金額：¥${total}</p>
+<a href="OrderServlet"><button type="button">注文確定</button></a>
 <c:if test="${empty cartMap}"> <%-- 要素数が0のインスタンス --%>
 <p>お客様のカートに商品はありません。</p>
 </c:if>
+<p>${errorMsg}</p>
 
+<br>
 <a href="LoginServlet">商品リストに戻る</a>
 </body>
 </html>

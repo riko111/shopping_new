@@ -21,19 +21,16 @@ public class ItemDAO {
         con = DBconnect.getConnection();
 
         try {
-//        	String sql = "SELECT id, name, type, price, quantity, image, state, created_at "
-//        			+ "FROM item WHERE type=? ORDER BY id DESC";
     		String sql = "SELECT id, name, type, price, quantity, image, state, created_at "
     				+ "FROM item ORDER BY id DESC";
 
-    		System.out.println("SELECT id, name, type, price, quantity, image, state, created_at "
-    				+ "FROM item ORDER BY id DESC");
+    		System.out.println(sql);
 
-            PreparedStatement pStmt = con.prepareStatement(sql);
+            PreparedStatement pstmt = con.prepareStatement(sql);
 //            pStmt.setInt(1, type);
 
     		// SQL文を実行
-    		ResultSet rs = pStmt.executeQuery();
+    		ResultSet rs = pstmt.executeQuery();
 
     		while (rs.next()) {
     			int id = rs.getInt("id");
@@ -57,4 +54,87 @@ public class ItemDAO {
         System.out.println("........................................");
         return itemList;
     }
+
+
+	// ◆在庫数をチェックするメソッド
+	public int checkStock(int item_id, int quantity) {
+ 		System.out.println("....................ItemDAO(checkStock())....................");
+
+ 		// データベース接続
+ 		Connection con = null;
+         con = DBconnect.getConnection();
+
+         try {
+        	// ■在庫数のチェック
+        	 String sql0 = "SELECT "
+			        	 + "CASE WHEN quantity<" + quantity +  " THEN false "
+			        	 + "ELSE true "
+			        	 + "END AS is_orderable "
+			        	 + "FROM item WHERE id=" + item_id; //※パラメータ指定すると文法エラーになったため、値を直接記述した
+
+        	System.out.println("SELECT CASE WHEN quantity<" + quantity + " THEN false ELSE true END AS is_orderable FROM item WHERE id=" + item_id);
+
+        	PreparedStatement pstmt0 = con.prepareStatement(sql0);
+       		ResultSet rs = pstmt0.executeQuery(sql0);
+//
+       		boolean is_orderable = false;
+       		if (rs.next()) {
+       			is_orderable = rs.getBoolean(1);
+       			System.out.println("is_orderable=" + is_orderable);
+       		}
+
+       		if (!is_orderable) {
+       			System.out.println("在庫が不足");
+       			System.out.println("........................................");
+       			return item_id; //不足商品のitem_id
+       		}
+
+         } catch (SQLException e) {
+          	e.printStackTrace();
+//  			return false;
+         }
+
+         System.out.println("在庫が足りている");
+         System.out.println("........................................");
+         return 0; //問題なし
+}
+
+
+    public boolean reduceStock(int item_id, int quantity) {
+ 		System.out.println("....................ItemDAO(adjustStock())....................");
+
+ 		// データベース接続
+ 		Connection con = null;
+         con = DBconnect.getConnection();
+
+         int orderResult = 0;
+
+         try {
+	       		// ■在庫数を減らす
+	     		String sql = "UPDATE item SET quantity=quantity-? WHERE id=?";
+
+	     		System.out.println("UPDATE item SET quantity=quantity-" + quantity + " WHERE id=" + item_id);
+
+	             PreparedStatement pstmt = con.prepareStatement(sql);
+	             pstmt.setInt(1, quantity);
+	             pstmt.setInt(2, item_id);
+
+	     		// SQL文を実行
+	     		int result = pstmt.executeUpdate();
+
+	     		if (result != 1) {
+	     			System.out.println("更新エラー");
+	     			return false;
+	     		}
+
+         } catch (SQLException e) {
+         	e.printStackTrace();
+// 			return false;
+
+         }
+         System.out.println("在庫数を注文数分減らした");
+         System.out.println("........................................");
+         return true;
+     }
+
 }

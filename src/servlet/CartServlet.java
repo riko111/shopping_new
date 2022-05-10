@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.UserBean;
+
 @WebServlet("/CartServlet")
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -32,6 +34,9 @@ public class CartServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		String cartId = (String) session.getAttribute("cartId");
+		UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+		System.out.println("cartId=" + cartId);
 
 		// ■「削除」ボタンが押された場合
 	    if (action != null && action.equals("delete")) {
@@ -48,9 +53,6 @@ public class CartServlet extends HttpServlet {
 			int quantity = Integer.parseInt(request.getParameter("quantity"));
 
 			System.out.println("item_id=" + item_id + ", name=" + name + ", price=" + price + ", quantity=" + quantity);
-
-	//		HttpSession session = request.getSession();
-	//		String cartId = (String) session.getAttribute("cartId");
 
 			// ■cartセッションが存在しない（初めてカートに入れる）場合
 			if (session.getAttribute(cartId) == null) {
@@ -97,12 +99,11 @@ public class CartServlet extends HttpServlet {
 			cartMap.put(item_id, item);
 	    }
 
-
-		System.out.println("格納されているキーの一覧 " + cartMap.keySet());
+//		System.out.println("格納されているキーの一覧 " + cartMap.keySet());
 		System.out.println("cartMap" + cartMap);
 
 		// ■カートをセッション保存
-		session.setAttribute(cartId, cartMap); //セッションスコープの属性名はユーザー固有
+		session.setAttribute(cartId, cartMap); //cartMapセッションの属性名はユーザー固有
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/cart.jsp");
 		dispatcher.forward(request, response);
