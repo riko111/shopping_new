@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import common.DBconnect;
 import model.HistoryBean;
@@ -22,15 +23,11 @@ public class HistoryDAO {
         con = DBconnect.getConnection();
 
         try {
-//        	String sql = "SELECT id, item_id, item_price, order_num, order_date "
-//        			+ "FROM history WHERE user_id=? ORDER BY id DESC";
     		String sql = "SELECT history.id, item_id, item_price, order_num, order_date, name AS item_name, item_price * order_num AS 'sum_price' "
     				+ "FROM history LEFT JOIN item " //外部結合のLEFT JOIN（左側に指定された表のすべての行を表示）
     				+ "ON history.item_id = item.id "
     				+ "WHERE user_id=? ORDER BY id DESC";
 
-//    		System.out.println("SELECT id, item_id, item_price, order_num, order_date "
-//    				+ "FROM history WHERE user_id=" + user_id + " ORDER BY id DESC");
     		System.out.println("SELECT history.id, item_id, item_price, order_num, order_date, name AS item_name, item_price * order_num AS 'sum_price' "
     				+ "FROM history LEFT JOIN item "
     				+ "ON history.item_id = item.id "
@@ -48,7 +45,7 @@ public class HistoryDAO {
     			int item_id = rs.getInt("item_id");
     			int item_price = rs.getInt("item_price");
     			int order_num = rs.getInt("order_num");
-				String order_date = rs.getString("order_date");
+				String order_date = rs.getString("order_date").substring(0, 16); //秒数の桁を除去
 
 				String item_name = rs.getString("item_name"); //追加
 				int sum_price = rs.getInt("sum_price"); //追加
@@ -67,39 +64,46 @@ public class HistoryDAO {
         return historyList;
     }
 
-    public Boolean addHistory(int user_id, int item_id, int item_price, int order_num) {
+    public Boolean addHistory(int user_id, Map<Integer, List<Object>> cartMap) {
  		System.out.println("....................HistoryDAO(addHistory())....................");
 
  		// データベース接続
  		Connection con = null;
-         con = DBconnect.getConnection();
+        con = DBconnect.getConnection();
 
-         try {
-       		// ■注文履歴を追加する
-     		String sql = "INSERT INTO history(user_id, item_id, item_price, order_num) VALUES (?,?,?,?)";
+        try {
+        	 // カートの情報を分解し、処理に使用できる形にする
+        	 for (Object key : cartMap.keySet()) {
+        		 System.out.println(key + " => " + cartMap.get(key));
+        		 int item_id = (int)key;
+        		 int item_price = (int) cartMap.get(key).get(1);
+        		 int order_num = (int) cartMap.get(key).get(2);
 
-     		System.out.println("INSERT INTO history(user_id, item_id, item_price, order_num) VALUES (" + user_id + ", " + item_id + ", " + item_price + ", " + order_num + ")");
+	       		// ■注文履歴を追加する
+	     		String sql = "INSERT INTO history(user_id, item_id, item_price, order_num) VALUES (?,?,?,?)";
 
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setInt(1, user_id);
-            pstmt.setInt(2, item_id);
-            pstmt.setInt(3, item_price);
-            pstmt.setInt(4, order_num);
+	     		System.out.println("INSERT INTO history(user_id, item_id, item_price, order_num) VALUES (" + user_id + ", " + item_id + ", " + item_price + ", " + order_num + ")");
 
-            int result = pstmt.executeUpdate();
+	            PreparedStatement pstmt = con.prepareStatement(sql);
+	            pstmt.setInt(1, user_id);
+	            pstmt.setInt(2, item_id);
+	            pstmt.setInt(3, item_price);
+	            pstmt.setInt(4, order_num);
 
-    		if (result == 1) {
-    			System.out.println("DBに1レコード追加");
-    		} else {
-    			System.out.println("DBレコード追加エラー");
-    		}
+	            int result = pstmt.executeUpdate();
 
+	    		if (result == 1) {
+	    			System.out.println("DBに1レコード追加");
+	    		} else {
+	    			System.out.println("DBレコード追加エラー");
+	    		}
+        	 }
 
-         } catch (SQLException e) {
-         	e.printStackTrace();
+        } catch (SQLException e) {
+	         	e.printStackTrace();
 
-         }
-         System.out.println("........................................");
-         return true;
-     }
+	    }
+ 		System.out.println("........................................");
+ 		return true;
+    }
 }

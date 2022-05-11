@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import common.DBconnect;
 import model.ItemBean;
@@ -27,7 +28,6 @@ public class ItemDAO {
     		System.out.println(sql);
 
             PreparedStatement pstmt = con.prepareStatement(sql);
-//            pStmt.setInt(1, type);
 
     		// SQL文を実行
     		ResultSet rs = pstmt.executeQuery();
@@ -63,58 +63,74 @@ public class ItemDAO {
 
 
 	// ◆在庫数をチェックするメソッド
-	public String checkStock(int item_id, int quantity) {
+	public String checkStock(Map<Integer, List<Object>> cartMap) {
  		System.out.println("....................ItemDAO(checkStock())....................");
 
  		// データベース接続
  		Connection con = null;
  		con = DBconnect.getConnection();
 
-        String short_stock = null; //在庫不足がある場合その商品名
+ 		String short_stock = null; //在庫不足がある場合その商品名
+
         try {
-        	// ■在庫数のチェック
-        	 String sql0 = "SELECT name, "
-			        	 + "CASE WHEN quantity<" + quantity +  " THEN false "
-			        	 + "ELSE true "
-			        	 + "END AS is_orderable "
-			        	 + "FROM item WHERE id=" + item_id; //※パラメータ指定すると文法エラーになったため、値を直接記述した
+        	// カートの情報を分解し、処理に使用できる形にする
+        	for (Object key : cartMap.keySet()) {
+        		int item_id = (int)key;
+        		int quantity = (int) cartMap.get(key).get(2);
 
-        	System.out.println("SELECT name, CASE WHEN quantity<" + quantity + " THEN false ELSE true END AS is_orderable FROM item WHERE id=" + item_id);
+        		System.out.println("quantity=" + quantity);
 
-        	PreparedStatement pstmt0 = con.prepareStatement(sql0);
-       		ResultSet rs = pstmt0.executeQuery(sql0);
-//
-       		boolean is_orderable = false;
-       		if (rs.next()) {
-       			is_orderable = rs.getBoolean("is_orderable");
-       			short_stock = rs.getString("name");
-       			System.out.println("is_orderable=" + is_orderable);
-       		}
+	        	// ■在庫数のチェック
+	        	String sql0 = "SELECT name, "
+				        	 + "CASE WHEN quantity<" + quantity +  " THEN false "
+				        	 + "ELSE true "
+				        	 + "END AS is_orderable "
+				        	 + "FROM item WHERE id=" + item_id; //※パラメータ指定すると文法エラーになったため、値を直接記述した
 
-       		if (!is_orderable) {
-       			System.out.println("在庫が不足");
-       			System.out.println("........................................");
-       		}
+	        	System.out.println("SELECT name, CASE WHEN quantity<" + quantity + " THEN false ELSE true END AS is_orderable FROM item WHERE id=" + item_id);
 
-         } catch (SQLException e) {
-          	e.printStackTrace();
-//  			return false;
-         }
+	        	PreparedStatement pstmt0 = con.prepareStatement(sql0);
+	       		ResultSet rs = pstmt0.executeQuery(sql0);
 
-         System.out.println("在庫が足りている");
-         System.out.println("........................................");
-         return short_stock;
+	       		boolean is_orderable = false;
+	       		if (rs.next()) {
+	       			is_orderable = rs.getBoolean("is_orderable");
+	       			System.out.println("is_orderable=" + is_orderable);
+	       		}
+
+	       		if (!is_orderable) {
+	       			System.out.println("item_id=" + item_id + "の在庫が不足");
+	       			short_stock = rs.getString("name");
+	       			System.out.println("........................................");
+	       			return short_stock; //在庫不足があればブロックを抜ける
+	       		}
+
+        	}
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        }
+		System.out.println("在庫が足りている");
+		System.out.println("........................................");
+		return short_stock;
 }
 
 
-    public boolean reduceStock(int item_id, int quantity) {
+    public boolean reduceStock(Map<Integer, List<Object>> cartMap) {
  		System.out.println("....................ItemDAO(adjustStock())....................");
 
  		// データベース接続
  		Connection con = null;
-         con = DBconnect.getConnection();
+        con = DBconnect.getConnection();
 
-         try {
+        try {
+        	 // カートの情報を分解し、処理に使用できる形にする
+        	 for (Object key : cartMap.keySet()) {
+        		 int item_id = (int)key;
+        		 int quantity = (int) cartMap.get(key).get(2);
+
+        		 System.out.println("quantity=" + quantity);
+
+
 	       		// ■在庫数を減らす
 	     		String sql = "UPDATE item SET quantity=quantity-? WHERE id=?";
 
@@ -132,12 +148,13 @@ public class ItemDAO {
 	     			return false;
 	     		}
 
+        	 }
          } catch (SQLException e) {
-         	e.printStackTrace();
-// 			return false;
-
+        	 e.printStackTrace();
+//        	 return false;
          }
-         System.out.println("在庫数を注文数分減らした");
+
+         System.out.println("在庫を注文数分減らした");
          System.out.println("........................................");
          return true;
      }

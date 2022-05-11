@@ -41,9 +41,14 @@ public class CartServlet extends HttpServlet {
 		// ■「削除」ボタンが押された場合
 	    if (action != null && action.equals("delete")) {
 
+	    	String name = request.getParameter("name");
+
+	    	System.out.println("name=" + name);
+
 	    	cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
 	    	cartMap.remove(item_id);
 	    	System.out.println(item_id + "をカートから削除した");
+	    	request.setAttribute("errorMsg", name + "をカートから削除しました。");
 
 	    // ■「カートに入れるボタン」が押された場合
 	    } else {
@@ -70,13 +75,15 @@ public class CartServlet extends HttpServlet {
 
 				// ■既に同じ商品がカートにある場合→更新
 				if (cartMap.containsKey(item_id)) {
+					int addedQuantity = 0;
+
 					System.out.println("既に同じ商品がカートにある");
 					item = (List<Object>) cartMap.get(item_id);
 
 					System.out.println("item.get(2)=" + item.get(2));
 					System.out.println("item.get(3)=" + item.get(3));
-					quantity = (int)item.get(2) + quantity;
-					item.set(2, quantity); //個数（quantity）
+					addedQuantity = (int)item.get(2) + quantity;
+					item.set(2, addedQuantity); //個数（quantity）
 					item.set(3, price * quantity); //合計（sum_price）
 					System.out.println("カートの " + item_id + " を更新");
 
@@ -93,6 +100,7 @@ public class CartServlet extends HttpServlet {
 			}
 
 			cartMap.put(item_id, item);
+			request.setAttribute("errorMsg", name + "を" + quantity + "点カートに追加しました。");
 	    }
 
 //		System.out.println("格納されているキーの一覧 " + cartMap.keySet());

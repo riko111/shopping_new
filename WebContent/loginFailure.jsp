@@ -9,7 +9,8 @@
 <body>
 
 <h1>ログイン失敗</h1>
+<p>ユーザー名・パスワードに誤りがあるか、アカウントが登録されていません。</p>
 <a href="/shopping_new">TOPに戻る</a><br>
-<a href="">アカウント登録</a>
+<a href="RegisterServlet">アカウント登録</a>
 </body>
 </html>

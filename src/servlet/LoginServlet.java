@@ -2,7 +2,6 @@ package servlet;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,7 +34,7 @@ public class LoginServlet extends HttpServlet {
 		// ■ログインしっぱい
 		if(loginUser == null) {
 			System.out.println("ログインNG");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/loginFailure.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("./loginFailure.jsp");
 			dispatcher.forward(request, response);
 
 		// ■ログイン成功
@@ -80,13 +79,13 @@ public class LoginServlet extends HttpServlet {
 
 	    request.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
+		System.out.println("action=" + action);
 
 		HttpSession session = request.getSession();
 		RequestDispatcher dispatcher = null;
 
 		// ■ログアウト処理
-		if(action != null && action.equals("logout")) {
-			System.out.println("action='logout'");
+		if (action != null && action.equals("logout")) {
 
 			// カート以外のセッションを破棄
 //			session.invalidate(); //全てのセッションを破棄
@@ -95,26 +94,25 @@ public class LoginServlet extends HttpServlet {
 			//
 			session = request.getSession();
 			UserBean loginUser = (UserBean)session.getAttribute("loginUser");
-			String cartId = "" + loginUser.getId();
+//			String cartId = "" + loginUser.getId();
 			//
 			session.removeAttribute("loginUser");
 			session.removeAttribute("itemList");
 			session.removeAttribute("historyList");
+			session.removeAttribute("cartMap");
 			System.out.println("ログアウトしました");
 			System.out.println("セッションスコープ(loginUser, itemList, historyList)を破棄");
 			System.out.println("セッションスコープ（cartMap）は、cartId（ユーザーID）で保持");
 
 
 //			Map<Integer, List<Object>> cartMap = (Map<Integer, List<Object>>) session.getAttribute("cartMap");
-			Map<Integer, List<Object>> cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
-			System.out.println("cartMapインスタンス=" + cartMap);
+//			Map<Integer, List<Object>> cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
+//			System.out.println("cartMapインスタンス=" + cartMap);
 
 			dispatcher = request.getRequestDispatcher("/");
 
 		// ■リンクから商品リストに遷移
-		} else {
-			System.out.println("action=''");
-
+		} else if (action != null && action.equals("itemList")) {
 			// 商品リストのセッションを最新化
 		    GetItemListLogic getItemListLogic = new GetItemListLogic();
 		    List<ItemBean> itemList = getItemListLogic.execute();
@@ -122,8 +120,13 @@ public class LoginServlet extends HttpServlet {
 		    session.setAttribute("itemList", itemList);
 
 		    System.out.println("リンクから商品リストに遷移");
-
 			dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/itemList.jsp");
+
+		// ■ログインチェックでエラー
+		} else {
+			System.out.println("不正ログインのためログイン失敗画面にリダイレクト");
+			response.sendRedirect("./loginFailure.jsp"); //URL表示を考慮しリダイレクト、ファイルはWebContent直下なので注意
+			return;
 		}
 
 		dispatcher.forward(request, response);

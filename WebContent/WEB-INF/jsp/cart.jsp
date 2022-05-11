@@ -37,6 +37,7 @@ session.setAttribute("cartMap", cartMap);
 
     <c:set var="total" value="${total + item.value[3]}" /> <%-- EL式内で加算し合計金額を算出 --%>
 
+    <input type="hidden" name="name" value="${item.value[0]}">
     <td><button type="submit" name="item_id" value="${item.key}">削除</button></td>
 <tr>
 </form>
@@ -44,11 +45,16 @@ session.setAttribute("cartMap", cartMap);
 </tbody>
 </table>
 
-<p>合計金額：¥${total}</p>
-<a href="OrderServlet"><button type="button">注文確定</button></a>
-<c:if test="${empty cartMap}"> <%-- 要素がない --%>
-<p>お客様のカートに商品はありません。</p>
-</c:if>
+<c:choose>
+	<c:when test="${empty cartMap}"> <%-- 要素がない --%>
+		<p>お客様のカートに商品はありません。</p>
+	</c:when>
+	<c:otherwise>
+		<p>合計金額：¥${total}</p>
+	<a href="OrderServlet"><button type="button">注文確定</button></a>
+	</c:otherwise>
+</c:choose>
+
 <p>${errorMsg}</p>
 
 <br>

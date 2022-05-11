@@ -34,6 +34,6 @@
 <p>お客様の注文履歴はありません。</p>
 </c:if>
 
-<a href="LoginServlet">商品リストに戻る</a>
+<a href="LoginServlet?action=itemList">商品リストに戻る</a>
 </body>
 </html>
