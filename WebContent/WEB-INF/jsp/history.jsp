@@ -23,12 +23,15 @@
 <tbody>
 <c:forEach var="history" items="${historyList}">
 <tr>
-    <td>${history.order_date}</td>
+		<td>${history.order_date}</td>
     <td>${history.item_name}</td>
     <td>¥${history.item_price}</td>
     <td>${history.order_num}</td>
     <td>¥${history.sum_price}</td>
 <tr>
+<%-- <c:if test="${history.order_date ==''}"> 注文日がない（同一注文）
+		<tr><td colspan="5"><hr></td></tr>
+</c:if> --%>
 </c:forEach>
 </tbody>
 </table>

@@ -67,8 +67,6 @@ public class OrderServlet extends HttpServlet {
 			return; //エラー（レスポンスをコミットした後でフォワードできません）対策
 		}
 
-
-
 		// OKなら次処理へ
 
 		result = false;

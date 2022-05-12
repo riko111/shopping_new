@@ -23,8 +23,7 @@ public class ItemDAO {
 
         try {
     		String sql = "SELECT id, name, type, price, quantity, image, state, created_at "
-    				+ "FROM item ORDER BY id DESC";
-
+    				+ "FROM item WHERE state=1 ORDER BY id DESC"; //state=0（販売中止）
     		System.out.println(sql);
 
             PreparedStatement pstmt = con.prepareStatement(sql);
@@ -159,4 +158,38 @@ public class ItemDAO {
          return true;
      }
 
+	// ◆在庫を初期設定するメソッド（管理者用）
+	public boolean restoreItemList() {
+ 		System.out.println("....................ItemDAO(restoreItemList())....................");
+
+ 		System.out.println("在庫の初期設定");
+
+ 		// データベース接続
+ 		Connection con = null;
+ 		con = DBconnect.getConnection();
+
+ 		boolean result = true;
+        try {
+        	String sql = "UPDATE item SET quantity=? WHERE id=?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+
+            int[] stocks = {5, 0, 5, 5, 5, 5, 5};
+
+            for (int i=0; i<stocks.length; i++) {
+	            pstmt.setInt(1, stocks[i]);
+	            pstmt.setInt(2, i+1);
+
+	            System.out.println("UPDATE item SET quantity=" + stocks[i] + " WHERE id=" + (i+1));
+	            int r = pstmt.executeUpdate();
+	            if (r != 1) {
+	            	result = false;
+	            }
+            }
+
+        } catch (SQLException e) {
+       	 e.printStackTrace();
+        }
+        System.out.println("........................................");
+        return result;
+    }
 }

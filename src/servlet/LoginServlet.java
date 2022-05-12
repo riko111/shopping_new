@@ -72,8 +72,8 @@ public class LoginServlet extends HttpServlet {
 			dispatcher.forward(request, response);
 		}
 
-
 	}
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    System.out.println("--------------------LoginServlet(doGet())--------------------");
 
@@ -91,11 +91,8 @@ public class LoginServlet extends HttpServlet {
 //			session.invalidate(); //全てのセッションを破棄
 			session.removeAttribute("cartMap");
 
-			//
 			session = request.getSession();
-			UserBean loginUser = (UserBean)session.getAttribute("loginUser");
-//			String cartId = "" + loginUser.getId();
-			//
+
 			session.removeAttribute("loginUser");
 			session.removeAttribute("itemList");
 			session.removeAttribute("historyList");
@@ -104,12 +101,7 @@ public class LoginServlet extends HttpServlet {
 			System.out.println("セッションスコープ(loginUser, itemList, historyList)を破棄");
 			System.out.println("セッションスコープ（cartMap）は、cartId（ユーザーID）で保持");
 
-
-//			Map<Integer, List<Object>> cartMap = (Map<Integer, List<Object>>) session.getAttribute("cartMap");
-//			Map<Integer, List<Object>> cartMap = (Map<Integer, List<Object>>) session.getAttribute(cartId);
-//			System.out.println("cartMapインスタンス=" + cartMap);
-
-			dispatcher = request.getRequestDispatcher("/");
+			response.sendRedirect("./");
 
 		// ■リンクから商品リストに遷移
 		} else if (action != null && action.equals("itemList")) {
@@ -121,15 +113,13 @@ public class LoginServlet extends HttpServlet {
 
 		    System.out.println("リンクから商品リストに遷移");
 			dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/itemList.jsp");
+			dispatcher.forward(request, response);
 
 		// ■ログインチェックでエラー
 		} else {
 			System.out.println("不正ログインのためログイン失敗画面にリダイレクト");
 			response.sendRedirect("./loginFailure.jsp"); //URL表示を考慮しリダイレクト、ファイルはWebContent直下なので注意
-			return;
 		}
-
-		dispatcher.forward(request, response);
 	}
 
 }

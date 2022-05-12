@@ -47,17 +47,18 @@ session.setAttribute("cartMap", cartMap);
 </tbody>
 </table>
 
+		<tr><td colspan="4"><hr></td></tr>
+<p>${errorMsg}</p>
+
 <c:choose>
 	<c:when test="${empty cartMap}"> <%-- 要素がない --%>
 		<p>お客様のカートに商品はありません。</p>
 	</c:when>
 	<c:otherwise>
 		<p>合計金額：¥${total}</p>
-	<a href="OrderServlet"><button type="button">注文確定</button></a>
+	<p><a href="OrderServlet"><button type="button">注文確定</button></a></p>
 	</c:otherwise>
 </c:choose>
-
-<p>${errorMsg}</p>
 
 <%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
 </body>
