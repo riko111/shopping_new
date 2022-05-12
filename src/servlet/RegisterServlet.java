@@ -32,12 +32,34 @@ public class RegisterServlet extends HttpServlet {
 		String pass = request.getParameter("pass");
 		System.out.println("userName=" + userName + ", pass=" + pass);
 
+		RequestDispatcher dispatcher;
+
+		UserBean loginUser = null;
 		RegisterLogic registerLogic = new RegisterLogic();
-		UserBean loginUser = registerLogic.execute(userName, pass);
 
-	    RequestDispatcher dispatcher;
+		boolean isValidInput = true;
 
-	    // ■アカウント登録成功
+		// ■入力チェック
+		// ユーザー名のチェックNG
+		if (!registerLogic.isValidInput(userName)) {
+			request.setAttribute("errorMsg", "ユーザー名が不正です。指定された形式で入力してください。");
+			isValidInput = false;
+		// パスワードのチェックNG
+		} else if (!registerLogic.isValidInput(pass)) {
+			request.setAttribute("errorMsg", "パスワードが不正です。指定された形式で入力してください。");
+			isValidInput = false;
+		}
+
+		// 入力チェックNGなら、アカウント登録しない
+		if (!isValidInput) {
+			dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/register.jsp");
+			dispatcher.forward(request, response);
+			return;
+		}
+
+	    // ■アカウント登録
+		loginUser = registerLogic.execute(userName, pass);
+		// 登録成功
 		if(loginUser != null) {
 			HttpSession session = request.getSession();
 		    session.setAttribute("loginUser", loginUser);
@@ -45,7 +67,7 @@ public class RegisterServlet extends HttpServlet {
 
 		    request.setAttribute("errorMsg", "アカウント " + userName + " を新規登録しました。");
 
-	    // ■アカウント登録しっぱい
+	    // 登録しっぱい
 		}else{
 			System.out.println("アカウント登録しっぱい");
 

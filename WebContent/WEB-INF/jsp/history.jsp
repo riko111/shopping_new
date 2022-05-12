@@ -8,7 +8,9 @@
 <meta charset="UTF-8">
 <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
 <title>注文履歴｜ショッピング</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 <h1>注文履歴</h1>
 
@@ -21,11 +23,11 @@
 <tbody>
 <c:forEach var="history" items="${historyList}">
 <tr>
-    <td><c:out value="${history.order_date}" /></td>
-    <td><c:out value="${history.item_name}" /></td>
-    <td><c:out value="¥${history.item_price}" /></td>
-    <td><c:out value="${history.order_num}" /></td>
-    <td><c:out value="¥${history.sum_price}" /></td>
+    <td>${history.order_date}</td>
+    <td>${history.item_name}</td>
+    <td>¥${history.item_price}</td>
+    <td>${history.order_num}</td>
+    <td>¥${history.sum_price}</td>
 <tr>
 </c:forEach>
 </tbody>
@@ -34,6 +36,6 @@
 <p>お客様の注文履歴はありません。</p>
 </c:if>
 
-<a href="LoginServlet?action=itemList">商品リストに戻る</a>
+<%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
 </body>
 </html>

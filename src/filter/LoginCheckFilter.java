@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
-@WebFilter(urlPatterns = {"/HistoryServlet", "/CartServlet"}) //フィルタを設定するサーブレットクラス・JSPファイルを指定
+@WebFilter(urlPatterns = {"/HistoryServlet", "/CartServlet", "/OrderServlet"}) //フィルタを設定するサーブレットクラス・JSPファイルを指定
 public class LoginCheckFilter implements Filter {
 
 	// ■フィルタがインスタンス化された直後

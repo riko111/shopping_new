@@ -15,7 +15,9 @@ session.setAttribute("cartMap", cartMap);
 <head>
 <meta charset="UTF-8">
 <title>カート｜ショッピング</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
 <h1>カート</h1>
@@ -57,7 +59,6 @@ session.setAttribute("cartMap", cartMap);
 
 <p>${errorMsg}</p>
 
-<br>
-<a href="LoginServlet">商品リストに戻る</a>
+<%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
 </body>
 </html>

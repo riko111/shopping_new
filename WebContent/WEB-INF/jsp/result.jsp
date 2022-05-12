@@ -10,6 +10,6 @@
 <h1>注文完了</h1>
 <p>ありがとうございます。注文処理が完了しました。</p>
 <br>
-<a href="LoginServlet">商品リストに戻る</a>
+<%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
 </body>
 </html>

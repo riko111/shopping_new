@@ -39,13 +39,27 @@ public class HistoryDAO {
     		// SQL文を実行
     		ResultSet rs = pStmt.executeQuery();
 
+    		// 退避エリア
+    		String save_order_date = null;
+    		String order_date = null;
+
     		while (rs.next()) {
     			int id = rs.getInt("id");
 //    			int user_id = rs.getInt("user_id");
     			int item_id = rs.getInt("item_id");
     			int item_price = rs.getInt("item_price");
     			int order_num = rs.getInt("order_num");
-				String order_date = rs.getString("order_date").substring(0, 16); //秒数の桁を除去
+
+    			// 一回の注文につき、注文日時を1つだけ表示したい
+    			if(save_order_date == null) {
+					order_date = rs.getString("order_date").substring(0, 16); //秒数の桁を除去
+					save_order_date = order_date;
+    			} else {
+    				if(order_date == save_order_date) {
+    					order_date = "&nbsp;";
+    					save_order_date = null;
+    				}
+    			}
 
 				String item_name = rs.getString("item_name"); //追加
 				int sum_price = rs.getInt("sum_price"); //追加
