@@ -32,13 +32,13 @@ public class LoginServlet extends HttpServlet {
 		UserBean loginUser = loginLogic.execute(userName, pass);
 
 		// ■ログインしっぱい
-		if(loginUser == null) {
+		if (loginUser == null) {
 			System.out.println("ログインNG");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("./loginFailure.jsp");
 			dispatcher.forward(request, response);
 
 		// ■ログイン成功
-		}else{
+		} else {
 			System.out.println("ログインOK");
 			System.out.println("loginUserインスタンス(" + loginUser.getId() + ", " + loginUser.getUserName() + ", " +  loginUser.getPass() + ")");
 

@@ -56,7 +56,7 @@ public class UserDAO {
 		boolean insertResult = false;
 
         try {
-        	System.out.println("registerUserのtry文");
+        	System.out.println("DBに重複するユーザーIDが無いかチェック");
         	String sql0 = "SELECT COUNT(*) FROM user WHERE userName= ? LIMIT 1;";
             PreparedStatement pstmt0 = con.prepareStatement(sql0);
             pstmt0.setString(1, user.getUserName());
@@ -71,26 +71,25 @@ public class UserDAO {
     		}
 
     		if (check_dup == 0) {
-	    			System.out.println("rs.getInt(1)=" + rs.getInt(1) );
-	    			System.out.println("DBに重複ユーザーIDなし");
+    			System.out.println("重複ユーザーIDなし");
 
-		        	String sql = "INSERT INTO user(userName, pass) VALUES(?, ?)";
-		            PreparedStatement pstmt = con.prepareStatement(sql);
-		            pstmt.setString(1, user.getUserName());
-		            pstmt.setString(2, user.getPass());
-		            System.out.println("INSERT INTO user(userName, pass) VALUES(" + user.getUserName() + ", " + user.getPass() + ")");
-		            // SQL文を実行
-		            int result = pstmt.executeUpdate();
+	        	String sql = "INSERT INTO user(userName, pass) VALUES(?, ?)";
+	            PreparedStatement pstmt = con.prepareStatement(sql);
+	            pstmt.setString(1, user.getUserName());
+	            pstmt.setString(2, user.getPass());
+	            System.out.println("INSERT INTO user(userName, pass) VALUES(" + user.getUserName() + ", " + user.getPass() + ")");
+	            // SQL文を実行
+	            int result = pstmt.executeUpdate();
 
-		    		if (result == 1) {
-		    			System.out.println("DBに1レコード追加");
-		    			insertResult = true;
-		    		} else {
-		    			System.out.println("DBレコード追加エラー");
-		    		}
+	    		if (result == 1) {
+	    			System.out.println("DBに1レコード追加");
+	    			insertResult = true;
 	    		} else {
-	    			System.out.println("DBに重複ユーザーIDあり");
+	    			System.out.println("DBレコード追加エラー");
 	    		}
+    		} else {
+    			System.out.println("重複ユーザーIDあり");
+    		}
 
         } catch (SQLException e) {
               e.printStackTrace();

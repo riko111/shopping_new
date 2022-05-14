@@ -24,8 +24,9 @@ public class DBconnect {
 	    //データベース接続の確立
 	    try {
 			con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS);
-			System.out.println("DB接続OK");
+//			System.out.println("DB接続OK");
 	    } catch(SQLException e) {
+			System.out.println("DB接続NG");
 	    	e.printStackTrace();
 	    }
 //	    } finally {

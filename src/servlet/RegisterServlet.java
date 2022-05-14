@@ -34,10 +34,9 @@ public class RegisterServlet extends HttpServlet {
 
 		RequestDispatcher dispatcher;
 
+		boolean isValidInput = true;
 		UserBean loginUser = null;
 		RegisterLogic registerLogic = new RegisterLogic();
-
-		boolean isValidInput = true;
 
 		// ■入力チェック
 		// ユーザー名のチェックNG
