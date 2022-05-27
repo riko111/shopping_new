@@ -124,7 +124,7 @@ public class HistoryDAO {
 
         } catch (SQLException e) {
 	         	e.printStackTrace();
-
+	         	return false;
 	    }
  		System.out.println("........................................");
  		return true;

@@ -53,6 +53,7 @@ public class LoginServlet extends HttpServlet {
 			System.out.println("セッションスコープにcartIdを保存");
 			System.out.println("cartId=" + cartId);
 
+			// 商品リストを取得
 		    GetItemListLogic getItemListLogic = new GetItemListLogic();
 		    List<ItemBean> itemList = getItemListLogic.execute();
 		    //リクエストスコープで渡す
