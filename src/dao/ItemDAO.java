@@ -173,7 +173,7 @@ public class ItemDAO {
         	String sql = "UPDATE item SET quantity=? WHERE id=?";
             PreparedStatement pstmt = con.prepareStatement(sql);
 
-            int[] stocks = {5, 0, 5, 5, 5, 5, 5};
+            int[] stocks = {5, 1, 5, 5, 5, 5, 5};
 
             for (int i=0; i<stocks.length; i++) {
 	            pstmt.setInt(1, stocks[i]);

@@ -6,6 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.7">
 <title>管理者画面｜ショッピング</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -38,14 +39,14 @@
     <input type="hidden" name="item_id" value="${item.id}">
     <input type="hidden" name="name" value="${item.name}">
     <input type="hidden" name="price" value="${item.price}">
-    <td>${i}</td>
+    <td>${item.quantity}</td>
 	</c:when>
 	<%-- ■在庫なし --%>
 	<c:otherwise>
 		<td>品切れ中！</td>
 	</c:otherwise>
 </c:choose>
-
+		<tr><td colspan="4"><img src="/shopping_new/upload/${item.image}" width="100" height="100"></td></tr>
     <tr><td colspan="4"><hr></td></tr>
 </c:forEach>
 </tbody>

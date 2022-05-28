@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.7">
 <title>アカウント登録｜ショッピング</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -13,7 +14,7 @@
 <form action="/shopping_new/RegisterServlet" method="post">
 ユーザー名：<input type="text" name="userName" required><br>
 パスワード：<input type="password" name="pass" required><br>
-※ユーザー名・パスワードとも、半角英数字の組合せで8～15字で入力して下さい。<br>
+※ユーザー名・パスワードとも、半角英数字の組合せで<br>8～15字で入力して下さい。<br>
 <button type="submit">アカウント登録</button><br>
 </form>
 <p>${errorMsg}</p>

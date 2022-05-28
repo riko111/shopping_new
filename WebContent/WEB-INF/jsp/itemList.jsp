@@ -7,6 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.7">
 <title>商品リスト｜ショッピング</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -48,6 +49,7 @@
 </c:choose>
 
 </form>
+		<tr><td colspan="4"><img src="/shopping_new/upload/${item.image}" width="100" height="100"></td></tr>
     <tr><td colspan="4"><hr></td></tr>
 </c:forEach>
 </tbody>

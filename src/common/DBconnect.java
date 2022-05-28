@@ -19,7 +19,7 @@ public class DBconnect {
 		System.out.println("DB_PASS：" + DB_PASS);
 
 	    try {
-	    	// JDBCドライバの有効化（JDBC Driver の登録）
+	    	// JDBCドライバの有効化（登録）
 	    	//Class.forName("com.mysql.jdbc.Driver"); //古い書き方
 	    	Class.forName("com.mysql.cj.jdbc.Driver"); //Java6以降、Class.forNameは不要だが後方互換のため残す
 	    } catch(ClassNotFoundException e) {
