@@ -24,6 +24,7 @@ public class DBconnectTest {
 	    final String DB_USER = "admin";
 	    final String DB_PASS = "mysqlpa55";
 
+//	    Connection con = null;
 	    try (Connection con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
 	    	//■userテーブル
     		String sql = "SELECT * FROM user";
@@ -40,6 +41,9 @@ public class DBconnectTest {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+//        	DBconnect.disconnect(con);
+        	con.close();
         }
 	}
 }

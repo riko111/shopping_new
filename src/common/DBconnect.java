@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-// DB接続の共通化
 public class DBconnect {
+
+// ■データベースと接続
 	public static Connection getConnection() {
 	    // 接続に使用する情報
 //		final String JDBC_URL = "jdbc:mysql://localhost:3306/shopping_new"; //localhost用
@@ -22,7 +23,7 @@ public class DBconnect {
 	    	// JDBCドライバの有効化（登録）
 	    	//Class.forName("com.mysql.jdbc.Driver"); //古い書き方
 	    	Class.forName("com.mysql.cj.jdbc.Driver"); //Java6以降、Class.forNameは不要だが後方互換のため残す
-	    } catch(ClassNotFoundException e) {
+	    } catch (ClassNotFoundException e) {
             e.printStackTrace();
 	    }
 
@@ -35,16 +36,19 @@ public class DBconnect {
 			System.out.println("DB接続NG");
 	    	e.printStackTrace();
 	    }
-//	    } finally {
-//	    	// データベース接続の切断 //これでいいか要確認
-//	    	if(con != null) {
-//	    		try {
-//	    			con.close();
-//		    	} catch(SQLException e) {
-//		    		e.printStackTrace();
-//		    	}
-//	    	}
-//	    }
+
 	    return con;
 	}
+
+	// ■データベース接続の切断
+//	public static void disconnect(Connection con) {
+//        try{
+//            con.close();
+//            System.out.println("DB接続を切断した");
+//        } catch (Exception ex){
+//            ex.printStackTrace();
+//        }
+//	}
+
+
 }

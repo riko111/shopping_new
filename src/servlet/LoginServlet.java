@@ -55,7 +55,8 @@ public class LoginServlet extends HttpServlet {
 
 			// 商品リストを取得
 		    GetItemListLogic getItemListLogic = new GetItemListLogic();
-		    List<ItemBean> itemList = getItemListLogic.execute();
+		    int userId = loginUser.getId();
+		    List<ItemBean> itemList = getItemListLogic.execute(userId);
 		    //リクエストスコープで渡す
 		    session.setAttribute("itemList", itemList);
 		    System.out.println("セッションスコープにitemListを保存");

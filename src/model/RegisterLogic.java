@@ -30,9 +30,9 @@ public class RegisterLogic {
 		return loginUser;
 	}
 
-	// ■ハッシュ化 //LoginLogicでも使用するメソッドなので別クラスに作るべきか
+	// ■ハッシュ化 //LoginLogicでも使用するメソッドなので別クラスに作るべきかも
 	public static String build (String pass) throws NoSuchAlgorithmException {
-		System.out.println("パスワードをハッシュ化する");
+		System.out.println("--------------------RegisterLogic(build(pass))--------------------");
 
 		StringBuilder buff = new StringBuilder();
 		if (pass != null && !pass.isEmpty()) {

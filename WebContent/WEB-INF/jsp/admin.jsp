@@ -23,7 +23,7 @@
 <table>
 <thead>
 <tr>
-<th>商品名</th><th>価格</th><th>数量</th><th>&nbsp;</th>
+<th>商品名</th><th>価格</th><th>数量</th><th>販売状態</th>
 </tr>
 </thead>
 <tbody>
@@ -31,21 +31,13 @@
 <tr>
     <td>${item.name}</td>
     <td>¥${item.price}</td>
-
-<%-- ■在庫切れのチェック --%>
-<c:choose>
-	<%-- ■在庫あり --%>
-	<c:when test="${item.quantity > 0}">
     <input type="hidden" name="item_id" value="${item.id}">
     <input type="hidden" name="name" value="${item.name}">
     <input type="hidden" name="price" value="${item.price}">
     <td>${item.quantity}</td>
-	</c:when>
-	<%-- ■在庫なし --%>
-	<c:otherwise>
-		<td>品切れ中！</td>
-	</c:otherwise>
-</c:choose>
+<c:if test="${item.state == 0}">
+	<td>販売中止</td>
+</c:if>
 		<tr><td colspan="4"><img src="/shopping_new/upload/${item.image}" width="100" height="100"></td></tr>
     <tr><td colspan="4"><hr></td></tr>
 </c:forEach>

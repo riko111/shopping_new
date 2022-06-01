@@ -12,7 +12,9 @@ import common.DBconnect;
 import model.ItemBean;
 
 public class ItemDAO {
-    public List<ItemBean> getItem() {
+
+	// ◆商品一覧を取得するメソッド
+    public List<ItemBean> getItem(int userId) {
 		System.out.println("....................ItemDAO(getItem())....................");
 
 		List<ItemBean> itemList = new ArrayList<>();
@@ -21,17 +23,27 @@ public class ItemDAO {
 		Connection con = null;
         con = DBconnect.getConnection();
 
-        try {
-    		String sql = "SELECT id, name, type, price, quantity, image, state, created_at "
-    				+ "FROM item WHERE state=1 ORDER BY id DESC"; //state=0（販売中止）
-    		System.out.println(sql);
+		String sql = null;
+		// 管理者の場合、全ての商品を取得
+		if (userId == 1) {
+			sql = "SELECT id, name, type, price, quantity, image, state, created_at "
+					+ "FROM item ORDER BY id DESC";
 
+		// 一般ユーザーの場合、販売中商品のみを取得
+		} else {
+			sql = "SELECT id, name, type, price, quantity, image, state, created_at "
+					+ "FROM item WHERE state=1 ORDER BY id DESC"; //state=0（販売中止）,state=1（販売中）
+		}
+
+        try {
+        	System.out.println(sql);
             PreparedStatement pstmt = con.prepareStatement(sql);
 
     		// SQL文を実行
     		ResultSet rs = pstmt.executeQuery();
 
     		while (rs.next()) {
+
     			int id = rs.getInt("id");
     			String name = rs.getString("name");
     			String type = rs.getString("type");
@@ -122,13 +134,11 @@ public class ItemDAO {
         con = DBconnect.getConnection();
 
         try {
-        	 // カートの情報を分解し、処理に使用できる形にする
         	 for (Object key : cartMap.keySet()) {
         		 int item_id = (int)key;
         		 int quantity = (int) cartMap.get(key).get(2);
 
         		 System.out.println("quantity=" + quantity);
-
 
 	       		// ■在庫数を減らす
 	     		String sql = "UPDATE item SET quantity=quantity-? WHERE id=?";
