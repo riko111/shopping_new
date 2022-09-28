@@ -1,7 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class ItemBean implements Serializable {
 	private int id;
@@ -14,6 +13,8 @@ public class ItemBean implements Serializable {
 	private String created_at;
 
 	public ItemBean() {}
+
+	// itemテーブル
 	public ItemBean(int id, String name, String type, int price, int quantity, String image, int state, String created_at) {
 		this.id = id;
 		this.name = name;
@@ -24,18 +25,11 @@ public class ItemBean implements Serializable {
 		this.state = state;
 		this.created_at = created_at;
 	}
-	// toString()をオーバーライド
+	// 商品一覧取得時のデバッグ表示用
 	public String toString() {
 		return "id:" + this.id + ",name:" + this.name + ",type:" + this.type + ",price:" + this.price
 				+ ",quantity:" + this.quantity + ",image:" + this.image + ",state:" + this.state + ",created_at:" + this.created_at;
 	}
-
-	// どうにかしてitem_idから商品名を取得したい ////////////////
-	public String getItemName(List<ItemBean> itemList, int id) {
-		String name = "ワンカラーネクタイ";
-		return name;
-	}
-	//////////////////
 
 	public int getId() {
 		return id;

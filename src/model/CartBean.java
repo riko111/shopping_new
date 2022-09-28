@@ -7,10 +7,10 @@ public class CartBean implements Serializable {
 	private String name;
 	private int price;
 	private int quantity;
-	private int sum_price; //追加
-	private int user_id; //追加
+	private int sum_price;
+	private int user_id;
 
-//	public CartBean(int id, String name, String type, int price, int quantity, String image, int state, String created_at, int sum_price, int user_id) {
+	// カート内の商品情報
 	public CartBean(int id, String name, int price, int quantity,int sum_price, int user_id) {
 		this.id = id;
 		this.name = name;

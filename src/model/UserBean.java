@@ -8,12 +8,16 @@ public class UserBean implements Serializable {
 	private String pass;
 
 	public UserBean() {}
-	public UserBean(String userName, String pass) {
+
+	// userテーブル ※ログイン時の管理者/一般ユーザー判定で使用
+	public UserBean(int id, String userName, String pass) {
+		this.id = id;
 		this.userName = userName;
 		this.pass = pass;
 	}
-	public UserBean(int id, String userName, String pass) {
-		this.id = id;
+
+	// 上記以外で使用
+	public UserBean(String userName, String pass) {
 		this.userName = userName;
 		this.pass = pass;
 	}

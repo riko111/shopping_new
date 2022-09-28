@@ -27,7 +27,7 @@
 
 <!--
 ローカルで実行
-http://localhost:8081/shopping_new
+http://localhost:8091/shopping_new
 
 サーバー（AWS）で実行
 http://ec2-15-152-40-23.ap-northeast-3.compute.amazonaws.com:8080/shopping_new

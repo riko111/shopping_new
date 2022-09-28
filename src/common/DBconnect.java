@@ -9,10 +9,10 @@ public class DBconnect {
 // ■データベースと接続
 	public static Connection getConnection() {
 	    // 接続に使用する情報
-//		final String JDBC_URL = "jdbc:mysql://localhost:3306/shopping_new"; //localhost用
-		final String JDBC_URL = "jdbc:mysql://database-1.cnclrt5gavnf.ap-northeast-3.rds.amazonaws.com:3306/shopping_new?characterEncoding=UTF-8&serverTimezone=SERVER"; //RDSのエンドポイント ※EC2のDNSやIP名ではない
-//	    final String DB_USER = "root"; //localhost用
-	    final String DB_USER = "admin"; //RDSのマスターユーザー名
+		final String JDBC_URL = "jdbc:mysql://localhost:3306/shopping_new"; //localhost用
+//		final String JDBC_URL = "jdbc:mysql://database-1.cnclrt5gavnf.ap-northeast-3.rds.amazonaws.com:3306/shopping_new?characterEncoding=UTF-8&serverTimezone=SERVER"; //RDSのエンドポイント ※EC2のDNSやIP名ではない
+	    final String DB_USER = "root"; //localhost用
+//	    final String DB_USER = "admin"; //RDSのマスターユーザー名
 	    final String DB_PASS = "mysqlpa55";
 
 		System.out.println("JDBC_URL：" + JDBC_URL);
@@ -40,6 +40,7 @@ public class DBconnect {
 	    return con;
 	}
 
+	// TODO:データベースを切断する処理を実装する
 	// ■データベース接続の切断
 //	public static void disconnect(Connection con) {
 //        try{

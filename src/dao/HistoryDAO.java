@@ -27,7 +27,6 @@ public class HistoryDAO {
     				+ "FROM history LEFT JOIN item " //外部結合のLEFT JOIN（左側に指定された表のすべての行を表示）
     				+ "ON history.item_id = item.id "
     				+ "WHERE user_id=? ORDER BY id DESC";
-//    				+ "WHERE user_id=? ORDER BY id ASC";
 
     		System.out.println("SELECT history.id, item_id, item_price, order_num, order_date, name AS item_name, item_price * order_num AS 'sum_price' "
     				+ "FROM history LEFT JOIN item "
@@ -50,28 +49,28 @@ public class HistoryDAO {
     			int item_id = rs.getInt("item_id");
     			int item_price = rs.getInt("item_price");
     			int order_num = rs.getInt("order_num");
-    			String item_name = rs.getString("item_name"); //追加
-    			int sum_price = rs.getInt("sum_price"); //追加
+    			String item_name = rs.getString("item_name");
+    			int sum_price = rs.getInt("sum_price");
 
-    			// 一回の注文につき、注文日時を1つだけ表示したい
-    			order_date = rs.getString("order_date").substring(0, 16); //秒数の桁を除去
+    			// 注文単位ごとに注文履歴を区切って表示するため、
+    			// 2行目以降は注文日時を空にする
+    			order_date = rs.getString("order_date").substring(0, 16);
     			if(save_order_date == null) {
     				System.out.println("最初の注文日時=" + order_date);
 					save_order_date = order_date;
 					System.out.println("退避エリアに保持 save_order_date=" + save_order_date);
     			} else {
-    				// 前回と同じ注文日時
+
     				if(order_date.equals(save_order_date)) { //文字列はequalsメソッドで比較する
     					System.out.println("前回と同じ注文日時=" + order_date);
     					order_date = "";
     					System.out.println("order_dateにスペース order_date=" + order_date);
-
-					// 前回と異なる注文日時
     				} else {
     					System.out.println("前回と異なる注文日時=" + order_date);
     					save_order_date = order_date;
     					System.out.println("退避エリアに保持 save_order_date=" + save_order_date);
     				}
+
     			}
 
 				HistoryBean history = new HistoryBean(id, user_id, item_id, item_price, order_num, order_date, item_name, sum_price);
@@ -90,7 +89,6 @@ public class HistoryDAO {
     public Boolean addHistory(int user_id, Map<Integer, List<Object>> cartMap) {
  		System.out.println("....................HistoryDAO(addHistory())....................");
 
- 		// データベース接続
  		Connection con = null;
         con = DBconnect.getConnection();
 
